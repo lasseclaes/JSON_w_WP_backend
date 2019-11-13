@@ -12,20 +12,45 @@ function getData() { //Jonas kalder den init
   const urlParams = new URLSearchParams(window.location.search);
   const search = urlParams.get("search");
   const id = urlParams.get("id");
+  const category = urlParams.get("category");
   console.log(search);
 
-  if (search) {
+  if (search) { //"routing"//
     console.log("this is a search page");
     getSearchData();
   } else if (id) {
     getSingleBook();
+  } else if (category) {
+    getCategoryeData(category);
+    console.log("this is a category page: " + category);
+
   } else {
     console.log("not searching");
     getFrontPageData();
   }
-
+  getNavigation();
 
 } //asyncronous has to use the server in London
+
+function getNavigation() {
+  fetch("http://kea-alt-del.dk/t9_2019_autumn/wp-json/wp/v2/categories?per_page=100")
+    .then(res => res.json())
+    .then(data => { //.then(function () {
+      console.log(data);
+      data.forEach(addNavLink);
+    });
+}
+
+function addNavLink(oneItem) {
+  console.log(oneItem.name);
+  if (oneItem.parent === 14 && oneItem.count > 0) { //omits categoris with notjhing in them
+    const link = document.createElement('a');
+    link.textContent = oneItem.name;
+    link.setAttribute("href", "category.html?category=" + oneItem.id);
+    document.querySelector('nav').appendChild(link);
+    //document.querySelector('nav').innerHTML += oneItem.name;
+  }
+}
 
 function getSearchData() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -38,7 +63,6 @@ function getSearchData() {
     .then(handleData)
 }
 
-
 function getFrontPageData() {
   console.log("getFrontPageData()")
   fetch("https://kea-alt-del.dk/t9_2019_autumn/wp-json/wp/v2/book?_embed")
@@ -46,6 +70,13 @@ function getFrontPageData() {
     .then(handleData)
 }
 
+function getCategoryeData(catId) {
+  console.log(catId);
+  console.log("getCategoryData()")
+  fetch("https://kea-alt-del.dk/t9_2019_autumn/wp-json/wp/v2/book?_embed&categories=" + catId)
+    .then(res => res.json())
+    .then(handleData)
+}
 
 function getSingleBook() {
   console.log("getSingleBook()")
@@ -95,6 +126,8 @@ function showPost(post) {
 
     img.setAttribute('src', imgSRC);
     img.setAttribute('alt', 'cover of the book ' + post.title.rendered);
+  } else {
+
   }
   // console.log(imgSRC)
 
