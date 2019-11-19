@@ -1,5 +1,6 @@
 //window.addEventListener("load") //load the content when everythin has loaded img, css etc
 window.addEventListener("DOMContentLoaded", getData); //HTML loaded
+//se perloader: https://github.com/jofhatkea/t9_2019_autumn/blob/master/index.js
 
 function getData() { //Jonas kalder den init
   //console.log('hey');
@@ -9,7 +10,10 @@ function getData() { //Jonas kalder den init
   //fetch("https://kea-alt-del.dk/t9_2019_autumn/wp-json/wp/v2/posts?_embed&search=consectetur")
   //fetch("https://kea-alt-del.dk/t9_2019_autumn/wp-json/wp/v2/book?_embed")
 
+  getNavigation();
+
   const urlParams = new URLSearchParams(window.location.search);
+  console.log("hey " + window.location);
   const search = urlParams.get("search");
   const id = urlParams.get("id");
   const category = urlParams.get("category");
@@ -28,7 +32,6 @@ function getData() { //Jonas kalder den init
     console.log("not searching");
     getFrontPageData();
   }
-  getNavigation();
 
 } //asyncronous has to use the server in London
 
